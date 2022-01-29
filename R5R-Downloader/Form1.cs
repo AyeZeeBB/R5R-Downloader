@@ -1,4 +1,5 @@
-﻿using R5R_Downloader.Properties;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using R5R_Downloader.Properties;
 using SuRGeoNix;
 using SuRGeoNix.BitSwarmLib;
 using SuRGeoNix.BitSwarmLib.BEP;
@@ -34,6 +35,7 @@ namespace R5R_Downloader
         {
             panel1.Location = new Point(12, 40);
             downloadpanel.Location = new Point(12, 40);
+            settingspanel.Location = new Point(12, 40);
             this.Size = new Size(597, 356);
             CenterToScreen();
 
@@ -48,12 +50,22 @@ namespace R5R_Downloader
 
                     if (Directory.Exists(Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\Temp\BitSwarm")))
                         Directory.Delete(Environment.ExpandEnvironmentVariables(@"%LOCALAPPDATA%\Temp\BitSwarm"), true);
+
+                    panel1.Visible = true;
+                    downloadpanel.Visible = false;
+                    guna2Button2.Enabled = false;
+                    guna2ImageButton1.Visible = false;
+                    guna2ImageButton1.Enabled = false;
+                    settingspanel.Visible = false;
                 }
                 else
                 {
                     panel1.Visible = false;
                     downloadpanel.Visible = true;
                     guna2Button2.Enabled = true;
+                    guna2ImageButton1.Visible = true;
+                    guna2ImageButton1.Enabled = true;
+                    settingspanel.Visible = false;
                 }
             }
             else
@@ -61,6 +73,9 @@ namespace R5R_Downloader
                 panel1.Visible = true;
                 downloadpanel.Visible = false;
                 guna2Button2.Enabled = false;
+                guna2ImageButton1.Visible = false;
+                guna2ImageButton1.Enabled = false;
+                settingspanel.Visible = false;
             }
 
             guna2AnimateWindow1.SetAnimateWindow(this, Guna.UI2.WinForms.Guna2AnimateWindow.AnimateWindowType.AW_BLEND);
@@ -83,13 +98,12 @@ namespace R5R_Downloader
                         opt.FolderComplete = @Settings.Default.DownloadPath;
                         opt.FolderIncomplete = @Settings.Default.DownloadPath + "/R5R-Downloading-Temp/";
 
-                        opt.MaxTotalConnections = 120;
-                        opt.MaxNewConnections = 300;
-                        opt.PeersFromTracker = -1;
-                        opt.ConnectionTimeout = 4000;
-                        opt.HandshakeTimeout = 4000;
-                        opt.PieceTimeout = 5500;
-                        opt.MetadataTimeout = 1900;
+                        opt.MaxTotalConnections = Settings.Default.MaxTotalConnections;
+                        opt.MaxNewConnections = Settings.Default.MaxNewConnections;
+                        opt.PeersFromTracker = Settings.Default.PeersFromTracker;
+                        opt.ConnectionTimeout = Settings.Default.ConnectionTimeout;
+                        opt.HandshakeTimeout = Settings.Default.HandshakeTimeout;
+                        opt.PieceTimeout = Settings.Default.PieceTimeout;
 
                         opt.Verbosity = 0;
                         opt.LogDHT = false;
@@ -101,7 +115,6 @@ namespace R5R_Downloader
                         button1.Text = "Stop";
 
                         bitSwarm = new BitSwarm(opt);
-
                         bitSwarm.StatsUpdated += BitSwarm_StatsUpdated;
                         bitSwarm.MetadataReceived += BitSwarm_MetadataReceived;
                         bitSwarm.StatusChanged += BitSwarm_StatusChanged;
@@ -302,17 +315,16 @@ namespace R5R_Downloader
 
         private void guna2Button1_Click(object sender, EventArgs e)
         {
-            using (var fbd = new FolderBrowserDialog())
-            {
-                DialogResult result = fbd.ShowDialog();
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            dialog.Title = "Select a folder to download to";
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                {
-                    Settings.Default.DownloadPath = fbd.SelectedPath;
-                    Settings.Default.Save();
-                    guna2TextBox1.Text = Settings.Default.DownloadPath;
-                    UpdateContinue();
-                }
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                Settings.Default.DownloadPath = dialog.FileName;
+                Settings.Default.Save();
+                guna2TextBox1.Text = Settings.Default.DownloadPath;
+                UpdateContinue();
             }
         }
         
@@ -334,11 +346,49 @@ namespace R5R_Downloader
             {
                 guna2Transition1.Hide(panel1);
                 guna2Transition1.Show(downloadpanel);
+
+                guna2ImageButton1.Visible = true;
+                guna2ImageButton1.Enabled = true;
             }
             else
             {
                 MessageBox.Show("Please select a path to download to!");
             }
+        }
+
+        private void guna2Button3_Click(object sender, EventArgs e)
+        {
+            Settings.Default.MaxTotalConnections = ((int)totalcons.Value);
+            Settings.Default.MaxNewConnections = ((int)newcons.Value);
+            Settings.Default.PeersFromTracker = ((int)pft.Value);
+            Settings.Default.ConnectionTimeout = ((int)contimeout.Value);
+            Settings.Default.HandshakeTimeout = ((int)handtimeout.Value);
+            Settings.Default.PieceTimeout = ((int)peicetimeout.Value);
+            Settings.Default.MetadataTimeout = ((int)metatimeout.Value);
+            Settings.Default.Save();
+
+            guna2Transition1.Hide(settingspanel);
+            guna2Transition1.Show(downloadpanel);
+        }
+
+        private void guna2ImageButton1_Click(object sender, EventArgs e)
+        {
+            totalcons.Value = Settings.Default.MaxTotalConnections;
+            newcons.Value = Settings.Default.MaxNewConnections;
+            pft.Value = Settings.Default.PeersFromTracker;
+            contimeout.Value = Settings.Default.ConnectionTimeout;
+            handtimeout.Value = Settings.Default.HandshakeTimeout;
+            peicetimeout.Value = Settings.Default.PieceTimeout;
+            metatimeout.Value = Settings.Default.MetadataTimeout;
+
+            guna2Transition1.Hide(downloadpanel);
+            guna2Transition1.Show(settingspanel);
+        }
+
+        private void guna2Button4_Click(object sender, EventArgs e)
+        {
+            guna2Transition1.Hide(settingspanel);
+            guna2Transition1.Show(downloadpanel);
         }
     }
 

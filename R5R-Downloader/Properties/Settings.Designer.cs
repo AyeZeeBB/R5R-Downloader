@@ -34,5 +34,89 @@ namespace R5R_Downloader.Properties {
                 this["DownloadPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("120")]
+        public int MaxTotalConnections {
+            get {
+                return ((int)(this["MaxTotalConnections"]));
+            }
+            set {
+                this["MaxTotalConnections"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public int MaxNewConnections {
+            get {
+                return ((int)(this["MaxNewConnections"]));
+            }
+            set {
+                this["MaxNewConnections"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int PeersFromTracker {
+            get {
+                return ((int)(this["PeersFromTracker"]));
+            }
+            set {
+                this["PeersFromTracker"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4000")]
+        public int ConnectionTimeout {
+            get {
+                return ((int)(this["ConnectionTimeout"]));
+            }
+            set {
+                this["ConnectionTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4000")]
+        public int HandshakeTimeout {
+            get {
+                return ((int)(this["HandshakeTimeout"]));
+            }
+            set {
+                this["HandshakeTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5500")]
+        public int PieceTimeout {
+            get {
+                return ((int)(this["PieceTimeout"]));
+            }
+            set {
+                this["PieceTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1900")]
+        public int MetadataTimeout {
+            get {
+                return ((int)(this["MetadataTimeout"]));
+            }
+            set {
+                this["MetadataTimeout"] = value;
+            }
+        }
     }
 }
