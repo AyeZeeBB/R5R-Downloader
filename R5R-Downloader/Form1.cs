@@ -25,6 +25,7 @@ namespace R5R_Downloader
         static Torrent torrent;
         static BitSwarm bitSwarm;
         static Options opt;
+        bool hasInstalledDS;
 
         public Form1()
         {
@@ -43,11 +44,7 @@ namespace R5R_Downloader
             {
                 if (!Directory.Exists(Settings.Default.DownloadPath + "/R5R-Downloading-Temp/"))
                 {
-                    if(!Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM"))
-                    {
-                        Directory.CreateDirectory(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/platform");
-                        StartR5RDetoursAndScripts();
-                    }
+
                     MessageBox.Show("Can not find previously downloaded files, restarting download!");
 
                     Settings.Default.DownloadPath = "";
@@ -103,7 +100,7 @@ namespace R5R_Downloader
                     guna2Button1.Enabled = false;
                     try
                     {
-                        
+
                         opt = new Options();
 
                         opt.FolderComplete = @Settings.Default.DownloadPath;
@@ -188,8 +185,7 @@ namespace R5R_Downloader
                 if (torrent != null) { torrent.Dispose(); torrent = null; }
 
                 output.Text += "\r\n\r\nFinished at " + DateTime.Now.ToString("G", DateTimeFormatInfo.InvariantInfo);
-                MessageBox.Show("Downloaded successfully!\r\n"/* + "Starting detours and scripts install."*/);
-                //StartR5RDetoursAndScripts();
+                MessageBox.Show("Downloaded successfully!\r\n");
             }
             else
             {
@@ -221,6 +217,11 @@ namespace R5R_Downloader
 
                 if (torrent != null && torrent.data.totalSize != 0)
                 {
+                    if (!hasInstalledDS)
+                    {
+                        StartR5RDetoursAndScripts();
+                        hasInstalledDS = true;
+                    }
                     Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance.SetProgressValue(e.Stats.Progress, 100);
                     progress.Value = e.Stats.Progress;
                 }
@@ -311,16 +312,8 @@ namespace R5R_Downloader
 
         private void StartR5RDetoursAndScripts()
         {
-            if (Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/"))
-            {
                 StartR5RDetours();
                 StartR5RScripts();
-                    
-            }
-            else
-            {
-                MessageBox.Show("Somthing went wrong and cant continue!");
-            }
         }
 
         #endregion
