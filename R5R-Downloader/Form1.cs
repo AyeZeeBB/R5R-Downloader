@@ -188,8 +188,8 @@ namespace R5R_Downloader
                 if (torrent != null) { torrent.Dispose(); torrent = null; }
 
                 output.Text += "\r\n\r\nFinished at " + DateTime.Now.ToString("G", DateTimeFormatInfo.InvariantInfo);
-                MessageBox.Show("Downloaded successfully!\r\n" + "Starting detours and scripts install.");
-                StartR5RDetoursAndScripts();
+                MessageBox.Show("Downloaded successfully!\r\n"/* + "Starting detours and scripts install."*/);
+                //StartR5RDetoursAndScripts();
             }
             else
             {
