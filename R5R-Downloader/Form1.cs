@@ -83,6 +83,11 @@ namespace R5R_Downloader
             Refresh();
         }
 
+        private void OnFormClosing()
+        {
+            torrent.SaveSession();
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (Settings.Default.DownloadPath != "")
@@ -93,6 +98,7 @@ namespace R5R_Downloader
                     guna2Button1.Enabled = false;
                     try
                     {
+                        
                         opt = new Options();
 
                         opt.FolderComplete = @Settings.Default.DownloadPath;
@@ -101,6 +107,7 @@ namespace R5R_Downloader
                         opt.MaxTotalConnections = Settings.Default.MaxTotalConnections;
                         opt.MaxNewConnections = Settings.Default.MaxNewConnections;
                         opt.PeersFromTracker = Settings.Default.PeersFromTracker;
+                        opt.BlockRequests = 500;
                         opt.ConnectionTimeout = Settings.Default.ConnectionTimeout;
                         opt.HandshakeTimeout = Settings.Default.HandshakeTimeout;
                         opt.PieceTimeout = Settings.Default.PieceTimeout;
@@ -119,7 +126,8 @@ namespace R5R_Downloader
                         bitSwarm.MetadataReceived += BitSwarm_MetadataReceived;
                         bitSwarm.StatusChanged += BitSwarm_StatusChanged;
 
-                        bitSwarm.Open("magnet:?xt=urn:btih:KCQJQT6DV2V4XWCOKCRM4EJELRLHQKI5&dn=R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM&tr=udp%3A%2F%2Fwambo.club%3A1337%2Fannounce");
+                        if(!Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM"))
+                            bitSwarm.Open("magnet:?xt=urn:btih:KCQJQT6DV2V4XWCOKCRM4EJELRLHQKI5&dn=R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM&tr=udp%3A%2F%2Fwambo.club%3A1337%2Fannounce");
                         bitSwarm.Start();
                     }
                     catch (Exception e1)
@@ -139,7 +147,7 @@ namespace R5R_Downloader
                     button1.Text = "Start";
                     guna2Button1.Enabled = true;
                 }
-            }
+            } 
             else
             {
                 MessageBox.Show("Please select a path to download to!");
@@ -226,8 +234,6 @@ namespace R5R_Downloader
         {
             if (Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/"))
             {
-                Thread thread = new Thread(() =>
-                {
                     this.BeginInvoke((MethodInvoker)delegate
                     {
                         bDownloaded.Text = "Downloading Detours";
@@ -253,7 +259,6 @@ namespace R5R_Downloader
 
                     File.Delete(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/detours-" + randomestring + ".zip");
 
-                    Thread.Sleep(1000);
 
                     if (!Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/platform"))
                     {
@@ -267,7 +272,6 @@ namespace R5R_Downloader
 
                     scriptsdownload.DownloadFile(new Uri("https://github.com/Mauler125/scripts_r5/archive/refs/heads/S3_N1094.zip"), @Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/platform/newscripts.zip");
 
-                    Thread.Sleep(1000);
 
                     if (Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/platform/scripts"))
                     {
@@ -283,7 +287,6 @@ namespace R5R_Downloader
                         bDownloaded.Text = "Installing Scripts";
                     });
 
-                    Thread.Sleep(1000);
 
                     File.Delete(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/platform/newscripts.zip");
 
@@ -294,8 +297,6 @@ namespace R5R_Downloader
                         MessageBox.Show("Scripts and detours have been installed!");
                         bDownloaded.Text = "Installing Complete";
                     });
-                });
-                thread.Start();
             }
             else
             {
