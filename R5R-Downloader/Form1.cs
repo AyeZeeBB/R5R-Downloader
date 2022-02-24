@@ -43,6 +43,11 @@ namespace R5R_Downloader
             {
                 if (!Directory.Exists(Settings.Default.DownloadPath + "/R5R-Downloading-Temp/"))
                 {
+                    if(!Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM"))
+                    {
+                        Directory.CreateDirectory(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/platform");
+                        StartR5RDetoursAndScripts();
+                    }
                     MessageBox.Show("Can not find previously downloaded files, restarting download!");
 
                     Settings.Default.DownloadPath = "";
@@ -126,7 +131,6 @@ namespace R5R_Downloader
                         bitSwarm.MetadataReceived += BitSwarm_MetadataReceived;
                         bitSwarm.StatusChanged += BitSwarm_StatusChanged;
 
-                        if(!Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM"))
                             bitSwarm.Open("magnet:?xt=urn:btih:KCQJQT6DV2V4XWCOKCRM4EJELRLHQKI5&dn=R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM&tr=udp%3A%2F%2Fwambo.club%3A1337%2Fannounce");
                         bitSwarm.Start();
                     }
@@ -216,10 +220,14 @@ namespace R5R_Downloader
                 dpeers.Text = e.Stats.PeersTotal.ToString();
 
                 if (torrent != null && torrent.data.totalSize != 0)
+                {
+                    Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager.Instance.SetProgressValue(e.Stats.Progress, 100);
                     progress.Value = e.Stats.Progress;
+                }
             }
 
         }
+
 
         private static Random random = new Random();
         public static string RandomString(int length)
@@ -319,12 +327,7 @@ namespace R5R_Downloader
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (bitSwarm != null) bitSwarm.Dispose();
-        }
-
-        private void guna2Panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        } 
 
         private void guna2Button1_Click(object sender, EventArgs e)
         {
