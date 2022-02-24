@@ -147,7 +147,7 @@ namespace R5R_Downloader
                     button1.Text = "Start";
                     guna2Button1.Enabled = true;
                 }
-            }
+            } 
             else
             {
                 MessageBox.Show("Please select a path to download to!");
