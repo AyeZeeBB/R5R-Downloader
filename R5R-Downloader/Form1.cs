@@ -209,6 +209,10 @@ namespace R5R_Downloader
             }
             else
             {
+                if(e.Stats.BytesDownloaded + e.Stats.BytesDownloadedPrevSession == torrent.data.totalSize)
+                {
+                    MessageBox.Show("Successfully downloaded.");
+                }
                 downRate.Text = String.Format("{0:n0}", (e.Stats.DownRate / 1024)) + " KB/s";
                 downRateAvg.Text = String.Format("{0:n0}", (e.Stats.AvgRate / 1024)) + " KB/s";
                 eta.Text = TimeSpan.FromSeconds((e.Stats.ETA + e.Stats.AvgETA) / 2).ToString(@"hh\:mm\:ss");
