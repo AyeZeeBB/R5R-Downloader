@@ -200,6 +200,7 @@ namespace R5R_Downloader
 
             if (torrent != null) torrent.Dispose();
         }
+        bool hasSentMessage = false;
         private void BitSwarm_StatsUpdated(object source, BitSwarm.StatsUpdatedArgs e)
         {
             if (InvokeRequired)
@@ -209,9 +210,10 @@ namespace R5R_Downloader
             }
             else
             {
-                if(e.Stats.BytesDownloaded + e.Stats.BytesDownloadedPrevSession == torrent.data.totalSize)
+                if(e.Stats.BytesDownloaded + e.Stats.BytesDownloadedPrevSession == torrent.data.totalSize && !hasSentMessage)
                 {
                     MessageBox.Show("Successfully downloaded.");
+                    hasSentMessage = true;
                 }
                 downRate.Text = String.Format("{0:n0}", (e.Stats.DownRate / 1024)) + " KB/s";
                 downRateAvg.Text = String.Format("{0:n0}", (e.Stats.AvgRate / 1024)) + " KB/s";
