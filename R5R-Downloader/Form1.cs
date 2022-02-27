@@ -185,7 +185,6 @@ namespace R5R_Downloader
                 if (torrent != null) { torrent.Dispose(); torrent = null; }
 
                 output.Text += "\r\n\r\nFinished at " + DateTime.Now.ToString("G", DateTimeFormatInfo.InvariantInfo);
-                MessageBox.Show("Downloaded successfully!\r\n");
             }
             else
             {
@@ -212,7 +211,8 @@ namespace R5R_Downloader
             {
                 if(e.Stats.BytesDownloaded + e.Stats.BytesDownloadedPrevSession == torrent.data.totalSize && !hasSentMessage)
                 {
-                    MessageBox.Show("Successfully downloaded.");
+                    MessageBox.Show("Downloaded Successfully.");
+                    progress.Value = 100;
                     hasSentMessage = true;
                 }
                 downRate.Text = String.Format("{0:n0}", (e.Stats.DownRate / 1024)) + " KB/s";
@@ -245,11 +245,11 @@ namespace R5R_Downloader
         }
 
         WebClient scriptsdownload = new WebClient();
+        #region DetoursAndScripts
         private void StartR5RDetours()
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
-                bDownloaded.Text = "Downloading Detours";
             });
 
             string randomestring = RandomString(10);
@@ -262,7 +262,6 @@ namespace R5R_Downloader
 
             this.BeginInvoke((MethodInvoker)delegate
             {
-                bDownloaded.Text = "Installing Detours";
             });
 
             var detoursextract = ZipFile.Open(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/detours-" + randomestring + ".zip", ZipArchiveMode.Read);
@@ -279,11 +278,9 @@ namespace R5R_Downloader
 
             this.BeginInvoke((MethodInvoker)delegate
             {
-                bDownloaded.Text = "Downloading Scripts";
             });
 
         }
-        #region DetoursAndScripts
 
         private void StartR5RScripts()
         {
@@ -301,7 +298,6 @@ namespace R5R_Downloader
 
             this.BeginInvoke((MethodInvoker)delegate
             {
-                bDownloaded.Text = "Installing Scripts";
             });
 
 
@@ -311,8 +307,6 @@ namespace R5R_Downloader
 
             this.BeginInvoke((MethodInvoker)delegate
             {
-                MessageBox.Show("Scripts and detours have been installed!");
-                bDownloaded.Text = "Installing Complete";
             });
         }
 
@@ -409,7 +403,10 @@ namespace R5R_Downloader
         private void guna2Button6_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM"))
+            {
                 StartR5RDetours();
+                MessageBox.Show("Successfully Updated/Reinstalled Detours!");
+            }
             else
                 MessageBox.Show("'R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM' folder not found! Wait for the torrent to download it.");
         }
@@ -418,7 +415,10 @@ namespace R5R_Downloader
         private void guna2Button5_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(Settings.Default.DownloadPath + "/R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM/platform"))
+            {
                 StartR5RScripts();
+                MessageBox.Show("Successfully Updated/Reinstalled Scripts!");
+            }
             else
                 MessageBox.Show("No 'platform' folder in R5pc_r5launch_N1094_CL456479_2019_10_30_05_20_PM folder");
         }
